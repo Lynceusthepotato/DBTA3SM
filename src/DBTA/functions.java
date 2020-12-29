@@ -108,47 +108,52 @@ public class functions {
     public void goToInsideUserReview(){
         try{
             conDB.connection = DriverManager.getConnection(conDB.url, conDB.user, conDB.password);
-            String q = "select review from rating where username ='" + mUI.userCurrentlyUsing + "' and movieID =" + mUI.movieID;
-            String q2 = "select rate from rating where username = '" + mUI.userCurrentlyUsing + "' and movieID =" + mUI.movieID;
+            String q = null, q2 = null;
+            if(mUI.valueInsideTheReview.equals(mUI.userCurrentlyUsing)) {
+                q = "select review from rating where username ='" + mUI.userCurrentlyUsing + "' and movieID =" + mUI.movieID;
+                q2 = "select rate from rating where username = '" + mUI.userCurrentlyUsing + "' and movieID =" + mUI.movieID;
+            } else {
+                q = "select review from rating where username ='" + mUI.valueInsideTheReview + "' and movieID =" + mUI.movieID;
+                q2 = "select rate from rating where username = '" + mUI.valueInsideTheReview + "' and movieID =" + mUI.movieID;
+            }
             PreparedStatement pst = conDB.connection.prepareStatement(q);
             PreparedStatement pst2 = conDB.connection.prepareStatement(q2);
             conDB.result = pst.executeQuery(q);
             conDB.result.next();
-            mUI.userNameIRLabel.setText(mUI.userCurrentlyUsing +  "'s " + mUI.valueOfTable +  " Review");
-            if(mUI.valueInsideTheReview.equals(mUI.userCurrentlyUsing)){
-                String review = conDB.result.getString("review");
-                conDB.result = pst2.executeQuery(q2);
-                conDB.result.next();
-                Integer rate = conDB.result.getInt("rate");
-                mUI.reviewTextArea.setText(review);
-                mUI.toReviewCB.getModel().setSelectedItem(rate);
-                mUI.userNameIRLabel.setText(mUI.userCurrentlyUsing + "'s Review");
-                vm.visibilityAtInsideUserReview();
-            } else {
-                JOptionPane.showMessageDialog(null, "You can't change other's review, " +
-                        "You can review by clicking the review button or click your own username ");
-            }
+            mUI.userNameIRLabel.setText(mUI.valueInsideTheReview +  "'s " + mUI.valueOfTable +  " Review");
+            String review = conDB.result.getString("review");
+            conDB.result = pst2.executeQuery(q2);
+            conDB.result.next();
+            Integer rate = conDB.result.getInt("rate");
+            mUI.reviewTextArea.setText(review);
+            mUI.toReviewCB.getModel().setSelectedItem(rate);
+            vm.visibilityAtInsideUserReview();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e);
         }
     }
 
+
     public void saveButtonFunction() {
         try{
-            conDB.connection = DriverManager.getConnection(conDB.url, conDB.user, conDB.password);
-            String q = " ";
-            if(mUI.alreadyReview){
-                q = "update rating set review = '" + mUI.reviewTextArea.getText() + "', rate = " + mUI.toReviewCB.getSelectedItem()
-                        + " where username = '" + mUI.userCurrentlyUsing + "' and movieID = " + mUI.movieID;
-
+            if(!mUI.valueInsideTheReview.equals(mUI.userCurrentlyUsing)){
+                JOptionPane.showMessageDialog(null, "You can't edit someone else review!");
             } else {
-                q = "insert into rating values(null, '" + mUI.userCurrentlyUsing + "', "+ mUI.toReviewCB.getSelectedItem() +", '" +
-                        mUI.reviewTextArea.getText() + "', "+ mUI.movieID + ")";
+                conDB.connection = DriverManager.getConnection(conDB.url, conDB.user, conDB.password);
+                String q = " ";
+                if(mUI.alreadyReview){
+                    q = "update rating set review = '" + mUI.reviewTextArea.getText() + "', rate = " + mUI.toReviewCB.getSelectedItem()
+                            + " where username = '" + mUI.userCurrentlyUsing + "' and movieID = " + mUI.movieID;
+
+                } else {
+                    q = "insert into rating values(null, '" + mUI.userCurrentlyUsing + "', "+ mUI.toReviewCB.getSelectedItem() +", '" +
+                            mUI.reviewTextArea.getText() + "', "+ mUI.movieID + ")";
+                }
+                PreparedStatement pst = conDB.connection.prepareStatement(q);
+                pst.executeUpdate();
+                mUI.changeRating();
+                JOptionPane.showMessageDialog(null, "Your review have been saved :D");
             }
-            PreparedStatement pst = conDB.connection.prepareStatement(q);
-            pst.executeUpdate();
-            mUI.changeRating();
-            JOptionPane.showMessageDialog(null, "Your review have been saved :D");
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e);
         }
