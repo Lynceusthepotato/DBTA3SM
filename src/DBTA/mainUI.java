@@ -153,6 +153,7 @@ public class mainUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 changeRating();
+                f.orderRanking();
                 vm.visibilityOnMovie();
             }
         });
@@ -194,7 +195,7 @@ public class mainUI {
     }
 
     public void createTotalRatingBox(){
-        totalRatingBox.setModel(new DefaultComboBoxModel(new String[] {"Ascending", "Descending"}));
+        totalRatingBox.setModel(new DefaultComboBoxModel(new String[] {" ","Ascending", "Descending"}));
     }
 
     public void createToReviewCB() {
@@ -208,7 +209,7 @@ public class mainUI {
     public void fetch() {
         try {
             conDB.connection = DriverManager.getConnection(conDB.url, conDB.user, conDB.password);
-            String q = "select movieTitle, description, rating from movie";
+            String q = "select movieTitle as 'Movie Title', description as 'Description', rating as 'Rating' from movie";
             conDB.statement = conDB.connection.prepareStatement(q);
             conDB.result = conDB.statement.executeQuery(q);
             movieList.setModel(DbUtils.resultSetToTableModel(conDB.result));

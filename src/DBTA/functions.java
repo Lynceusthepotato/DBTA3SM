@@ -69,6 +69,7 @@ public class functions {
 
     public void orderRanking() {
         try {
+            mUI.totalRatingBox.removeItem(" ");
             String insideOrder = mUI.totalRatingBox.getSelectedItem().toString();
             if(insideOrder.equals("Ascending")){
                 insideOrder = "ASC";
@@ -76,7 +77,7 @@ public class functions {
                 insideOrder = "DESC";
             }
             conDB.connection = DriverManager.getConnection(conDB.url, conDB.user, conDB.password);
-            String q = ("select movieTitle, description, rating from movie order by rating " + insideOrder);
+            String q = ("select movieTitle as 'Movie Title', description as 'Description', rating as 'Rating' from movie order by rating " + insideOrder);
             PreparedStatement pst = conDB.connection.prepareStatement(q);
             conDB.result = pst.executeQuery();
             mUI.movieList.setModel(DbUtils.resultSetToTableModel(conDB.result));
@@ -92,7 +93,7 @@ public class functions {
             PreparedStatement pst = conDB.connection.prepareStatement(q);
             conDB.result = pst.executeQuery(q);
             if(conDB.result.next()){
-                String movieRating = "select username, review, rate from rating where movieID = " + conDB.result.getInt("id");
+                String movieRating = "select username as 'Username', review as 'Review', rate as 'Rating' from rating where movieID = " + conDB.result.getInt("id");
                 mUI.movieID = conDB.result.getInt("id");
                 conDB.statement = conDB.connection.prepareStatement(movieRating);
                 conDB.result = conDB.statement.executeQuery(movieRating);
@@ -113,6 +114,7 @@ public class functions {
             PreparedStatement pst2 = conDB.connection.prepareStatement(q2);
             conDB.result = pst.executeQuery(q);
             conDB.result.next();
+            mUI.userNameIRLabel.setText(mUI.userCurrentlyUsing +  "'s " + mUI.valueOfTable +  " Review");
             if(mUI.valueInsideTheReview.equals(mUI.userCurrentlyUsing)){
                 String review = conDB.result.getString("review");
                 conDB.result = pst2.executeQuery(q2);
@@ -158,6 +160,7 @@ public class functions {
             String q = "select review from rating where username ='" + mUI.userCurrentlyUsing + "' and movieID =" + mUI.movieID;
             PreparedStatement pst = conDB.connection.prepareStatement(q);
             conDB.result = pst.executeQuery();
+            mUI.userNameIRLabel.setText(mUI.userCurrentlyUsing +  "'s " + mUI.valueOfTable +  " Review");
             if(conDB.result.next()){
                 mUI.alreadyReview = true;
                 goToInsideUserReview();
