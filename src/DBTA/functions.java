@@ -69,7 +69,6 @@ public class functions {
 
     public void orderRanking() {
         try {
-            mUI.totalRatingBox.removeItem(" ");
             String insideOrder = mUI.totalRatingBox.getSelectedItem().toString();
             if(insideOrder.equals("Ascending")){
                 insideOrder = "ASC";
@@ -110,6 +109,7 @@ public class functions {
             conDB.connection = DriverManager.getConnection(conDB.url, conDB.user, conDB.password);
             String q = null, q2 = null;
             if(mUI.valueInsideTheReview.equals(mUI.userCurrentlyUsing)) {
+                mUI.alreadyReview = true;
                 q = "select review from rating where username ='" + mUI.userCurrentlyUsing + "' and movieID =" + mUI.movieID;
                 q2 = "select rate from rating where username = '" + mUI.userCurrentlyUsing + "' and movieID =" + mUI.movieID;
             } else {

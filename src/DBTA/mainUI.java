@@ -76,6 +76,7 @@ public class mainUI {
         createTotalRatingBox();
         createToReviewCB();
         changeRating();
+        f.orderRanking();
 
         // Stuff
         movieList.getTableHeader().setBackground(Color.white);
@@ -154,6 +155,7 @@ public class mainUI {
             public void actionPerformed(ActionEvent e) {
                 changeRating();
                 f.orderRanking();
+                alreadyReview = false;
                 vm.visibilityOnMovie();
             }
         });
@@ -195,7 +197,7 @@ public class mainUI {
     }
 
     public void createTotalRatingBox(){
-        totalRatingBox.setModel(new DefaultComboBoxModel(new String[] {" ","Ascending", "Descending"}));
+        totalRatingBox.setModel(new DefaultComboBoxModel(new String[] {"Ascending", "Descending"}));
     }
 
     public void createToReviewCB() {
