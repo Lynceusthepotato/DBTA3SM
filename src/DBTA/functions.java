@@ -146,7 +146,7 @@ public class functions {
                             + " where username = '" + mUI.userCurrentlyUsing + "' and movieID = " + mUI.movieID;
 
                 } else {
-                    q = "insert into rating values(null, '" + mUI.userCurrentlyUsing + "', "+ mUI.toReviewCB.getSelectedItem() +", '" +
+                    q = "insert into rating values('" + mUI.userCurrentlyUsing + "', "+ mUI.toReviewCB.getSelectedItem() +", '" +
                             mUI.reviewTextArea.getText() + "', "+ mUI.movieID + ")";
                 }
                 PreparedStatement pst = conDB.connection.prepareStatement(q);
